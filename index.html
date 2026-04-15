@@ -4,9 +4,90 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sistem_rekomendasi_sepatu</title>
+    <title>VelocityScout | Sistem Rekomendasi Sepatu</title>
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS (via CDN as provided) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-container": "#2f486a",
+              "on-secondary": "#f0f2ff",
+              "surface-tint": "#445d80",
+              "tertiary-container": "#bdfc00",
+              "inverse-on-surface": "#869ec5",
+              "surface-container": "#dde9ff",
+              "on-tertiary-fixed": "#354900",
+              "surface-variant": "#cbdeff",
+              "secondary-dim": "#004da4",
+              "on-surface-variant": "#445d80",
+              "outline-variant": "#96afd6",
+              "on-tertiary": "#deff96",
+              "surface-container-highest": "#cbdeff",
+              "on-tertiary-container": "#445d00",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#004594",
+              outline: "#60789d",
+              "surface-container-high": "#d4e3ff",
+              "secondary-fixed-dim": "#a8c4ff",
+              secondary: "#0058ba",
+              "tertiary-fixed-dim": "#b1ed00",
+              "on-secondary-fixed": "#00326f",
+              "tertiary-fixed": "#bdfc00",
+              "on-error": "#ffefee",
+              "on-error-container": "#570008",
+              "secondary-fixed": "#bed2ff",
+              "primary-dim": "#385173",
+              "error-container": "#fb5151",
+              "secondary-container": "#bed2ff",
+              error: "#b31b25",
+              "surface-dim": "#bdd6ff",
+              "primary-fixed-dim": "#acc5ed",
+              "inverse-surface": "#000e23",
+              "on-tertiary-fixed-variant": "#4c6800",
+              "on-secondary-fixed-variant": "#004ea5",
+              "on-background": "#142f50",
+              "surface-bright": "#f4f6ff",
+              "on-surface": "#142f50",
+              primary: "#445d80",
+              surface: "#f4f6ff",
+              "error-dim": "#9f0519",
+              background: "#f4f6ff",
+              "tertiary-dim": "#3f5700",
+              "surface-container-low": "#ebf1ff",
+              "on-primary-fixed": "#1b3556",
+              "on-primary-fixed-variant": "#395274",
+              "primary-container": "#bad3fc",
+              "primary-fixed": "#bad3fc",
+              "inverse-primary": "#bad3fc",
+              tertiary: "#496400",
+              "on-primary": "#eef3ff",
+            },
+            fontFamily: {
+              headline: ["Lexend"],
+              body: ["Plus Jakarta Sans"],
+              label: ["Lexend"],
+            },
+          },
+        },
+      };
+    </script>
   </head>
-  <body>
+  <body
+    class="bg-background font-body text-on-surface selection:bg-tertiary-container selection:text-on-tertiary-container"
+  >
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

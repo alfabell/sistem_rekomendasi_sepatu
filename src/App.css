@@ -14,9 +14,8 @@ body {
 }
 
 .app-container {
-  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 40px 20px;
 }
 
 /* Hero Section Styling */
@@ -406,7 +405,7 @@ body {
   text-align: center;
   margin-top: 40px;
   padding-top: 20px;
-  border-top: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   color: #8b9eb5;
   font-size: 0.95rem;
 }
@@ -424,8 +423,14 @@ body {
 }
 
 @keyframes slideDown {
-  0% { opacity: 0; transform: translateY(-10px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .range-helper {
@@ -464,7 +469,7 @@ body {
 /* Modifying submit button size relative to reset button */
 .form-section .submit-btn {
   flex: 0.7;
-  margin-top: 0; 
+  margin-top: 0;
 }
 
 /* Progress bar */
@@ -483,7 +488,6 @@ body {
   border-radius: 10px;
   transition: width 1s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-
 
 /* --- Tampilan Gambar di Hasil Rekomendasi --- */
 .result-img {
@@ -514,12 +518,14 @@ body {
   border: 1px solid #e1e7f0;
   border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .catalog-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(91,134,229,0.1);
+  box-shadow: 0 8px 15px rgba(91, 134, 229, 0.1);
   border-color: #5b86e5;
 }
 
@@ -556,4 +562,3 @@ body {
   border-radius: 20px;
   font-weight: 600;
 }
-

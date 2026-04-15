@@ -76,20 +76,24 @@ function App() {
 
       {error && <div className="error-toast">?? {error}</div>}
 
-      <main className="main-content">
-        <FormPreferensi
-          form={form}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          handleReset={handleReset}
-          loading={loading}
-        />
-        <HasilRekomendasi result={result} loading={loading} />
-      </main>
+      <main className="relative min-h-screen kinetic-bg">
+        {/* Background Decorative Diagonal */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-[600px] h-[600px] bg-tertiary-container/10 rounded-full blur-[120px]"></div>
+          <div className="absolute top-[20%] -left-[10%] w-[40%] h-[2px] bg-tertiary-container/20 rotate-[35deg]"></div>
+        </div>
 
-      <footer className="app-footer">
-        <p>Dibuat untuk penikmat sepak bola & futsal</p>
-      </footer>
+        <div className="w-full px-6 md:px-12 lg:px-20 py-12 grid grid-cols-1 lg:grid-cols-12 gap-10 relative z-10">
+          <FormPreferensi
+            form={form}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            handleReset={handleReset}
+            loading={loading}
+          />
+          <HasilRekomendasi result={result} loading={loading} />
+        </div>
+      </main>
     </div>
   );
 }
