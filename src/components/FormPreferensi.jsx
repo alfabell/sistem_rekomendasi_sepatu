@@ -58,24 +58,24 @@ function FormPreferensi({
                 onChange={handleChange}
                 className="w-full bg-surface-container-low border-none rounded-md px-4 py-3 font-medium focus:ring-2 focus:ring-tertiary-container appearance-none transition-all"
               >
-                <option>Indoor</option>
-                <option>Outdoor</option>
+                <option>Futsal (Indoor)</option>
+                <option>Turf (Outdoor)</option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="font-headline text-[11px] font-bold uppercase tracking-widest text-primary">
-                Kategori Harga
+               Kategori Harga
               </label>
-              <select
-                name="harga"
-                value={form.harga}
-                onChange={handleChange}
-                className="w-full bg-surface-container-low border-none rounded-md px-4 py-3 font-medium focus:ring-2 focus:ring-tertiary-container appearance-none transition-all"
-              >
-                <option>Murah</option>
-                <option>Sedang</option>
-                <option>Mahal</option>
-              </select>
+
+            <select
+              name="harga"
+              value={form.harga}
+              onChange={handleChange}
+              className="w-full bg-surface-container-low border-none rounded-md px-4 py-3 font-medium focus:ring-2 focus:ring-tertiary-container appearance-none transition-all">
+              <option value="Murah">Murah (&lt; 300rb)</option>
+              <option value="Sedang">Sedang (300rb – 700rb)</option>
+              <option value="Mahal">Mahal (&gt; 700rb)</option>
+            </select>
             </div>
           </div>
 
