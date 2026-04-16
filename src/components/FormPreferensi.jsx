@@ -8,7 +8,7 @@ function FormPreferensi({
   loading,
 }) {
   return (
-    <aside className="lg:col-span-4 xl:col-span-3 space-y-8 text-left">
+    <aside id="form-preferensi" className="lg:col-span-4 xl:col-span-3 space-y-8 text-left">
       <div className="glass-panel rounded-xl p-8 shadow-2xl">
         <h2 className="font-headline font-bold text-2xl tracking-tight mb-8 text-on-surface flex items-center gap-3">
           <span

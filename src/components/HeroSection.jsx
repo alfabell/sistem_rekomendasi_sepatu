@@ -29,8 +29,11 @@ function HeroSection() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <button className="bg-tertiary-container text-on-tertiary-container px-8 py-4 rounded-full font-black text-lg hover:scale-105 transition-all shadow-xl shadow-tertiary-container/20 active:scale-95 flex items-center gap-2">
-                MULAI SCOUTING
+              <button
+                onClick={() => document.getElementById('form-preferensi')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-tertiary-container text-on-tertiary-container px-8 py-4 rounded-full font-black text-lg hover:scale-105 transition-all shadow-xl shadow-tertiary-container/20 active:scale-95 flex items-center gap-2"
+              >
+                MULAI SEKARANG
                 <span
                   className="material-symbols-outlined"
                   data-icon="arrow_forward"
@@ -38,25 +41,18 @@ function HeroSection() {
                   arrow_forward
                 </span>
               </button>
-              <button className="px-8 py-4 rounded-full font-bold text-lg border-2 border-outline-variant/30 hover:bg-surface-container transition-all active:scale-95">
-                Lihat Katalog
-              </button>
             </div>
           </div>
 
           {/* Right Visual */}
-          <div className="relative">
-            <div className="relative z-10 w-full aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
+          <div className="relative flex justify-center">
+            <div className="relative z-10 w-4/5 md:w-3/4 aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
               {/* GAMBAR TEMPLATE */}
               <img
                 className="w-full h-full object-cover object-top bg-slate-200"
-                src="https://placehold.co/800x1000/e2e8f0/64748b?text=Masukkan+Gambar+Disini"
+                src="/gambar_hero_section.jpg"
                 alt="Hero Visual Template"
               />
-
-              {/* Overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-on-background/60 to-transparent"></div>
-              <div className="absolute bottom-8 left-8 right-8 p-6 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20"></div>
             </div>
           </div>
         </div>
