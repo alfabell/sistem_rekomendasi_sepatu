@@ -79,7 +79,7 @@ function HasilRekomendasi({ result, loading }) {
 
       {/* STATE LOADING */}
       {loading && (
-        <div className="flex flex-col items-center justify-center p-12 bg-surface-container-highest rounded-xl border border-outline-variant/30 shadow-sm min-h-[300px]">
+        <div className="flex flex-col items-center justify-center p-12 bg-white rounded-xl border border-outline-variant/30 shadow-sm min-h-[300px]">
           <div className="w-12 h-12 border-4 border-tertiary-container border-t-secondary rounded-full animate-spin mb-4"></div>
           <p className="font-headline font-bold text-on-surface-variant tracking-wider uppercase">
             Memproses data terbaik untukmu...
@@ -95,7 +95,7 @@ function HasilRekomendasi({ result, loading }) {
             sepatuPopuler.map((item, index) => (
               <div
                 key={`pop-${index}`}
-                className={`group relative overflow-hidden bg-surface-container-highest rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 ${index === 0 ? "md:col-span-2 transform md:scale-[1.02] border-2 border-tertiary-container/30" : "p-6"}`}
+                className={`group relative overflow-hidden bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 ${index === 0 ? "md:col-span-2 transform md:scale-[1.02] border-2 border-tertiary-container/30" : "p-6"}`}
               >
                 <div className="absolute top-0 right-0 z-20">
                   <div
@@ -141,13 +141,13 @@ function HasilRekomendasi({ result, loading }) {
                 ) : (
                   // Layout for #2, #3, #4
                   <>
-                    <div className="relative mb-6">
-                      <span className="absolute top-0 left-0 px-3 py-1 bg-surface-container-low text-primary font-bold text-[10px] uppercase rounded-full">
+                    <div className="relative mb-6 pt-4">
+                      <span className="absolute top-0 left-0 px-3 py-1 bg-surface-container-low text-primary font-bold text-[10px] uppercase rounded-full z-10">
                         {item.kategori}
                       </span>
                       <img
                         alt={item.nama}
-                        className="w-full h-48 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-40 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500"
                         src={item.img}
                       />
                     </div>
@@ -174,7 +174,7 @@ function HasilRekomendasi({ result, loading }) {
               return (
                 <div
                   key={`res-${index}`}
-                  className={`group relative overflow-hidden bg-surface-container-highest rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 ${index === 0 ? "md:col-span-2 transform md:scale-[1.02] border-2 border-tertiary-container/30" : "p-6"}`}
+                  className={`group relative overflow-hidden bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 ${index === 0 ? "md:col-span-2 transform md:scale-[1.02] border-2 border-tertiary-container/30" : "p-6"}`}
                   style={{ animationDelay: index * 0.1 + "s" }}
                 >
                   <div className="absolute top-0 right-0 z-20">
@@ -227,13 +227,13 @@ function HasilRekomendasi({ result, loading }) {
                   ) : (
                     // Layout for Other Ranked Results
                     <>
-                      <div className="relative mb-6">
-                        <span className="absolute top-0 left-0 px-3 py-1 bg-surface-container-low text-primary font-bold text-[10px] uppercase rounded-full">
-                          Match: {percentage}%
-                        </span>
-                        <img
-                          alt={item.nama}
-                          className="w-full h-48 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500"
+                    <div className="relative mb-6 pt-4">
+                      <span className="absolute top-0 left-0 px-3 py-1 bg-surface-container-low text-primary font-bold text-[10px] uppercase rounded-full z-10">
+                        Match: {percentage}%
+                      </span>
+                      <img
+                        alt={item.nama}
+                        className="w-full h-40 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500"
                           src={imgSrc}
                         />
                       </div>

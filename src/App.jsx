@@ -2,6 +2,7 @@ import { useState } from "react";
 import HeroSection from "./components/HeroSection";
 import FormPreferensi from "./components/FormPreferensi";
 import HasilRekomendasi from "./components/HasilRekomendasi";
+import SectionFooter from "./components/SectionFooter";
 import "./App.css";
 
 const initialForm = {
@@ -94,6 +95,8 @@ function App() {
           <HasilRekomendasi result={result} loading={loading} />
         </div>
       </main>
+
+      <SectionFooter />
     </div>
   );
 }
