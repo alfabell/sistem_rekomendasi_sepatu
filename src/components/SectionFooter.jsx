@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const SectionFooter = () => {
   return (
@@ -32,9 +33,14 @@ const SectionFooter = () => {
 
       {/* Bagian Copyright */}
       <div style={styles.bottom}>
-        <p style={{ margin: 0 }}>
-          &copy; {new Date().getFullYear()} Sistem Rekomendasi Sepatu. Hak Cipta Dilindungi.
-        </p>
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <p style={{ margin: 0 }}>
+            &copy; {new Date().getFullYear()} Sistem Rekomendasi Sepatu. Hak Cipta Dilindungi.
+          </p>
+          <Link to="/admin" style={styles.adminButton}>
+            Admin
+          </Link>
+        </div>
       </div>
     </footer>
   );
@@ -90,6 +96,17 @@ const styles = {
     marginTop: '20px',
     fontSize: '0.85rem',
     color: '#9ca3af',
+  },
+  adminButton: {
+    position: 'absolute',
+    right: '0',
+    color: '#9ca3af',
+    textDecoration: 'none',
+    fontSize: '12px',
+    border: '1px solid #4b5563',
+    padding: '4px 10px',
+    borderRadius: '4px',
+    transition: 'all 0.3s'
   }
 };
 
