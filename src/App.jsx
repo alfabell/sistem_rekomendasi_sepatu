@@ -1,5 +1,7 @@
 import { useState } from "react";
+import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
+import ProductSection from "./components/ProductSection";
 import FormPreferensi from "./components/FormPreferensi";
 import HasilRekomendasi from "./components/HasilRekomendasi";
 import SectionFooter from "./components/SectionFooter";
@@ -73,8 +75,9 @@ function App() {
 
   return (
     <div className="app-container">
+      <Navbar />
       <HeroSection />
-
+      <ProductSection />
       {error && <div className="error-toast">?? {error}</div>}
 
       <main className="relative min-h-screen kinetic-bg">

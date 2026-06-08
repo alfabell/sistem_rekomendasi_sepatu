@@ -3,6 +3,7 @@ import React from "react";
 function HeroSection() {
   return (
     <>
+    <section id="beranda"></section>
       <main className="relative py-16 overflow-hidden min-h-screen">
         {/* Hero Background Elements */}
         <div className="absolute top-0 right-0 w-1/2 h-full -z-10 overflow-hidden">

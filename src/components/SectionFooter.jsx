@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const SectionFooter = () => {
   return (
-    <footer style={styles.footer}>
+    <footer id="kontak" style={styles.footer}>
       <div style={styles.content}>
         {/* Bagian Deskripsi / Branding */}
         <div style={styles.section}>
@@ -20,6 +20,7 @@ const SectionFooter = () => {
             <li><a href="#beranda" style={styles.link}>Beranda</a></li>
             <li><a href="#preferensi" style={styles.link}>Cari Sepatu</a></li>
             <li><a href="#rekomendasi" style={styles.link}>Hasil Rekomendasi</a></li>
+            <li><a href="#kontak" style={styles.link}>Kontak</a></li>
           </ul>
         </div>
 
