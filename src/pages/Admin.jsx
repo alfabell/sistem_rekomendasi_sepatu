@@ -8,18 +8,22 @@ const Admin = () => {
   // --- STATE UNTUK FORM TAMBAH PRODUK ---
   const [showForm, setShowForm] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
-    nama: '',
-    brand: 'Nike', 
-    lapangan: 'Indoor',
-    harga: 'Sedang'
-  });
+  nama: '',
+  brand: 'Nike',
+  lapangan: 'Indoor',
+  harga: 'Sedang',
+  berat: 'Ringan',
+  material: 'Synthetic'
+});
 
   // Pastikan URL API Anda sudah tepat (disesuaikan dengan nama file backend)
   const API_URL = 'http://localhost/sisrek/admin_api.php';
   
   // Masukkan URL file PHP yang baru saja Anda buat di sini
   const API_ADD_URL = 'http://localhost/sisrek/add_api.php';
+  const API_UPDATE_URL = 'http://localhost/sisrek/update_api.php';
 
   // Fungsi untuk load / update data dari server
   const fetchData = () => {
@@ -73,7 +77,7 @@ const Admin = () => {
           alert('Berhasil: ' + data.pesan);
           setShowForm(false);
           // Reset form kembali ke default
-          setFormData({ nama: '', brand: 'Nike', lapangan: 'Indoor', harga: 'Sedang' });
+          setFormData({ nama: '', brand: 'Nike', lapangan: 'Indoor', harga: 'Sedang', berat: 'Ringan', material: 'Synthetic' });
           fetchData(); // Menarik ulang seluruh data supaya muncul di tabel bawah tanpa reload
         } else {
           alert('Gagal dari server: ' + data.pesan);
@@ -90,6 +94,101 @@ const Admin = () => {
       alert("Gagal menghubungi server backend (Error Jaringan/FETCH). Pastikan XAMPP nyala dan script file PHP diletakkan di htdocs/sisrek.");
     }
   };
+
+  const handleDelete = async (id) => {
+  if (!window.confirm("Yakin ingin menghapus data ini?")) {
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `http://localhost/sisrek/delete_api.php?id=${id}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.status === "success") {
+      alert("Data berhasil dihapus");
+      fetchData();
+    } else {
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Gagal menghapus data");
+  }
+};
+
+const handleEdit = (item) => {
+
+  setEditId(item.id);
+
+  setFormData({
+    nama: item.nama,
+    brand: item.brand,
+    lapangan: item.lapangan,
+    harga: item.harga,
+    berat: item.berat,
+    material: item.material
+  });
+
+  setShowForm(true);
+};
+
+const handleUpdateProduct = async (e) => {
+
+  e.preventDefault();
+
+  try {
+
+    const res = await fetch(API_UPDATE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: editId,
+        ...formData
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "success") {
+
+      alert("Data berhasil diupdate");
+
+      setEditId(null);
+
+      setFormData({
+        nama: '',
+        brand: 'Nike',
+        lapangan: 'Indoor',
+        harga: 'Sedang',
+        berat: 'Ringan',
+        material: 'Synthetic'
+      });
+
+      setShowForm(false);
+
+      fetchData();
+
+    } else {
+
+      alert(data.message);
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+    alert("Gagal update data");
+
+  }
+};
 
   return (
     <div style={{ padding: '40px', backgroundColor: '#fcfcfc', minHeight: '100vh', color: '#1f2937' }}>
@@ -117,7 +216,12 @@ const Admin = () => {
       {showForm && (
         <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', border: '1px solid #e5e7eb', marginBottom: '24px' }}>
           <h2 style={{ fontSize: '20px', margin: '0 0 16px 0', borderBottom: '1px solid #e5e7eb', paddingBottom: '12px' }}>Masukkan Data Sepatu Baru</h2>
-          <form onSubmit={handleAddProduct} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+          <form
+  onSubmit={
+    editId
+      ? handleUpdateProduct
+      : handleAddProduct
+  } style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px' }}>Nama Sepatu</label>
               <input required type="text" name="nama" value={formData.nama} onChange={handleChange} placeholder="Contoh: Nike Mercurial..." style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db', boxSizing: 'border-box' }} />
@@ -146,15 +250,20 @@ const Admin = () => {
                 <option value="Mahal">Mahal</option>
               </select>
             </div>
-            
+            <div></div>
             <div style={{ display: 'flex', alignItems: 'flex-end', paddingTop: '4px' }}>
               <button type="submit" disabled={loadingSubmit} style={{ width: '100%', padding: '10px', background: loadingSubmit ? '#9ca3af' : '#10b981', color: '#fff', borderRadius: '6px', border: 'none', cursor: loadingSubmit ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}>
-                {loadingSubmit ? 'Menyimpan...' : 'Simpan ke Database'}
+                {loadingSubmit
+              ? 'Menyimpan...'
+              : editId
+              ? 'Update Data'
+              : 'Simpan ke Database'}
               </button>
             </div>
           </form>
         </div>
       )}
+
 
       <div style={{ overflowX: 'auto', background: '#fff', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', whiteSpace: 'nowrap' }}>
@@ -184,8 +293,8 @@ const Admin = () => {
                   <td style={{ padding: '16px' }}>{item.kategori || item.lapangan || '-'}</td>
                   <td style={{ padding: '16px' }}>{item.harga || '-'}</td>
                   <td style={{ padding: '16px' }}>
-                    <button style={{ marginRight: '16px', color: '#2563eb', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Edit</button>
-                    <button style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Hapus</button>
+                    <button onClick={() => handleEdit(item)} style={{ marginRight: '16px', color: '#2563eb', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Edit</button>
+                    <button onClick={() => handleDelete(item.id)} style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Hapus</button>
                   </td>
                 </tr>
               ))

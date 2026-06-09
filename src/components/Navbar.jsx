@@ -30,7 +30,7 @@ const Navbar = () => {
     logo: {
       fontSize: "1.3rem",
       fontWeight: "600",
-      color: "#16a34a",
+      color: "#161ba3",
       cursor: "pointer",
     },
 
@@ -48,7 +48,7 @@ const Navbar = () => {
     },
 
     rekomendasiButton: {
-      backgroundColor: "#16a34a",
+      backgroundColor: "#161ba3",
       color: "#ffffff",
       border: "none",
       padding: "10px 18px",

@@ -50,7 +50,7 @@ const ProductSection = () => {
 
     productCount: {
       textAlign: "center",
-      color: "#16a34a",
+      color: "#161ba3",
       fontWeight: "600",
       marginBottom: "40px",
     },
@@ -73,7 +73,7 @@ const ProductSection = () => {
     cardTitle: {
       fontSize: "1.2rem",
       fontWeight: "700",
-      color: "#16a34a",
+      color: "#161ba3",
       marginBottom: "15px",
     },
 
@@ -85,8 +85,8 @@ const ProductSection = () => {
     },
 
     badge: {
-      backgroundColor: "#dcfce7",
-      color: "#166534",
+      backgroundColor: "#d1d3ef",
+      color: "#161ba3",
       padding: "5px 10px",
       borderRadius: "999px",
       fontSize: "0.8rem",
@@ -197,7 +197,7 @@ const ProductSection = () => {
               style={{
                 ...styles.pageButton,
                 backgroundColor:
-                  currentPage === index + 1 ? "#16a34a" : "#ffffff",
+                  currentPage === index + 1 ? "#161ba3" : "#ffffff",
                 color:
                   currentPage === index + 1 ? "#ffffff" : "#374151",
               }}
