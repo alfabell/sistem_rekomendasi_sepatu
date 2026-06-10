@@ -70,6 +70,14 @@ const ProductSection = () => {
       cursor: "pointer",
     },
 
+    image: {
+  width: "100%",
+  height: "220px",
+  objectFit: "cover",
+  borderRadius: "12px",
+  marginBottom: "15px",
+},
+
     cardTitle: {
       fontSize: "1.2rem",
       fontWeight: "700",
@@ -153,7 +161,19 @@ const ProductSection = () => {
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              <h3 style={styles.cardTitle}>👟 {item.nama}</h3>
+              <img
+  src={`http://localhost/sisrek/uploads/${item.gambar}`}
+  alt={item.nama}
+  style={styles.image}
+  onError={(e) => {
+    e.target.src =
+      "https://via.placeholder.com/300x220?text=No+Image";
+  }}
+/>
+
+<h3 style={styles.cardTitle}>
+  👟 {item.nama}
+</h3>
 
               <div style={styles.badgeContainer}>
                 <span style={styles.badge}>{item.brand}</span>

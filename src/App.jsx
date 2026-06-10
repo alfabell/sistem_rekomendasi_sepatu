@@ -21,6 +21,7 @@ function App() {
   const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   // handle perubahan input
   const handleChange = (e) => {
@@ -31,17 +32,21 @@ function App() {
   };
 
   // handle reset
-  const handleReset = () => {
-    setForm(initialForm);
-    setResult([]);
-    setError(null);
-  };
+const handleReset = () => {
+  setForm(initialForm);
+  setResult([]);
+  setError(null);
+  setHasSearched(false);
+};
 
   // submit ke backend
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  e.preventDefault();
+
+  setHasSearched(true);
+
+  setLoading(true);
+  setError(null);
 
     const url =
       "http://localhost/sisrek/rekomendasi.php?brand=" +
@@ -95,7 +100,11 @@ function App() {
             handleReset={handleReset}
             loading={loading}
           />
-          <HasilRekomendasi result={result} loading={loading} />
+          <HasilRekomendasi
+  result={result}
+  loading={loading}
+  hasSearched={hasSearched}
+/>
         </div>
       </main>
 
