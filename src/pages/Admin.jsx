@@ -6,6 +6,7 @@ const initialFormData = {
   brand: 'Nike',
   lapangan: 'Indoor',
   harga: 'Sedang',
+  harga_nominal: '',
   berat: 'Ringan',
   material: 'Synthetic',
   gambar: ''
@@ -176,6 +177,7 @@ const handleEdit = (item) => {
     brand: item.brand,
     lapangan: item.lapangan,
     harga: item.harga,
+    harga_nominal: item.harga_nominal || '',
     berat: item.berat,
     material: item.material,
     gambar: item.gambar || ''
@@ -290,6 +292,17 @@ const handleUpdateProduct = async (e) => {
                 <option value="Sedang">Sedang</option>
                 <option value="Mahal">Mahal</option>
               </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px' }}>Harga Nominal</label>
+              <input
+                type="number"
+                name="harga_nominal"
+                value={formData.harga_nominal}
+                onChange={handleChange}
+                placeholder="Contoh: 700000"
+                style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db', boxSizing: 'border-box' }}
+              />
             </div>
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px' }}>Upload Gambar Produk</label>

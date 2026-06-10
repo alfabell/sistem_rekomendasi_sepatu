@@ -100,8 +100,8 @@ function HasilRekomendasi({ result, loading, hasSearched }) {
                   </p>
 
                   <p className="text-sm text-gray-600 mb-1">
-                    Harga: {item.harga}
-                  </p>
+  Harga: Rp {Number(item.harga_nominal).toLocaleString("id-ID")}
+</p>
 
                   <p className="text-sm text-gray-600 mb-3">
                     Lapangan: {item.lapangan}

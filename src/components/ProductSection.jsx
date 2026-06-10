@@ -181,8 +181,9 @@ const ProductSection = () => {
               </div>
 
               <p style={styles.info}>
-                <strong>Harga:</strong> {item.harga}
-              </p>
+  <strong>Harga:</strong>{" "}
+  Rp {Number(item.harga_nominal).toLocaleString("id-ID")}
+</p>
 
               <p style={styles.info}>
                 <strong>Berat:</strong> {item.berat}
