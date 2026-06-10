@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+const initialFormData = {
+  nama: '',
+  brand: 'Nike',
+  lapangan: 'Indoor',
+  harga: 'Sedang',
+  berat: 'Ringan',
+  material: 'Synthetic',
+  gambar: ''
+};
+
 const Admin = () => {
   const [dataSepatu, setDataSepatu] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,14 +19,9 @@ const Admin = () => {
   const [showForm, setShowForm] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState({
-  nama: '',
-  brand: 'Nike',
-  lapangan: 'Indoor',
-  harga: 'Sedang',
-  berat: 'Ringan',
-  material: 'Synthetic'
-});
+  const [formData, setFormData] = useState(initialFormData);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState('');
 
   // Pastikan URL API Anda sudah tepat (disesuaikan dengan nama file backend)
   const API_URL = 'http://localhost/sisrek/admin_api.php';
@@ -44,12 +49,56 @@ const Admin = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (previewImage?.startsWith('blob:')) {
+        URL.revokeObjectURL(previewImage);
+      }
+    };
+  }, [previewImage]);
+
+  const resetForm = () => {
+    if (previewImage?.startsWith('blob:')) {
+      URL.revokeObjectURL(previewImage);
+    }
+
+    setFormData(initialFormData);
+    setSelectedImage(null);
+    setPreviewImage('');
+    setEditId(null);
+  };
+
   // Handler mengubah input
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0] || null;
+
+    if (previewImage?.startsWith('blob:')) {
+      URL.revokeObjectURL(previewImage);
+    }
+
+    setSelectedImage(file);
+    setPreviewImage(file ? URL.createObjectURL(file) : '');
+  };
+
+  const buildPayload = () => {
+    const payload = new FormData();
+
+    Object.entries(formData).forEach(([key, value]) => {
+      payload.append(key, value ?? '');
+    });
+
+    if (selectedImage) {
+      payload.append('file_gambar', selectedImage);
+    }
+
+    return payload;
   };
 
   // Handler mengirim (POST) ke PHP Backend
@@ -60,10 +109,7 @@ const Admin = () => {
     try {
       const res = await fetch(API_ADD_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData)
+        body: buildPayload()
       });
       
       // Ambil respon murni dari PHP (karena bisa jadi error sintaks PHP / warning HTML)
@@ -76,8 +122,7 @@ const Admin = () => {
         if (data.status === "success") {
           alert('Berhasil: ' + data.pesan);
           setShowForm(false);
-          // Reset form kembali ke default
-          setFormData({ nama: '', brand: 'Nike', lapangan: 'Indoor', harga: 'Sedang', berat: 'Ringan', material: 'Synthetic' });
+          resetForm();
           fetchData(); // Menarik ulang seluruh data supaya muncul di tabel bawah tanpa reload
         } else {
           alert('Gagal dari server: ' + data.pesan);
@@ -132,8 +177,11 @@ const handleEdit = (item) => {
     lapangan: item.lapangan,
     harga: item.harga,
     berat: item.berat,
-    material: item.material
+    material: item.material,
+    gambar: item.gambar || ''
   });
+  setSelectedImage(null);
+  setPreviewImage(item.gambar ? `http://localhost/sisrek/uploads/${item.gambar}` : '');
 
   setShowForm(true);
 };
@@ -146,13 +194,11 @@ const handleUpdateProduct = async (e) => {
 
     const res = await fetch(API_UPDATE_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: editId,
-        ...formData
-      })
+      body: (() => {
+        const payload = buildPayload();
+        payload.append('id', editId);
+        return payload;
+      })()
     });
 
     const data = await res.json();
@@ -161,17 +207,7 @@ const handleUpdateProduct = async (e) => {
 
       alert("Data berhasil diupdate");
 
-      setEditId(null);
-
-      setFormData({
-        nama: '',
-        brand: 'Nike',
-        lapangan: 'Indoor',
-        harga: 'Sedang',
-        berat: 'Ringan',
-        material: 'Synthetic'
-      });
-
+      resetForm();
       setShowForm(false);
 
       fetchData();
@@ -201,7 +237,12 @@ const handleUpdateProduct = async (e) => {
         {/* Tombol Aksi di Header Kanan */}
         <div style={{ display: 'flex', gap: '10px' }}>
           <button 
-            onClick={() => setShowForm(!showForm)} 
+            onClick={() => {
+              if (showForm) {
+                resetForm();
+              }
+              setShowForm(!showForm);
+            }} 
             style={{ padding: '10px 20px', background: showForm ? '#ef4444' : '#3b82f6', color: '#fff', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: '0.2s' }}
           >
             {showForm ? 'Batal Tambah' : '+ Tambah Produk'}
@@ -250,6 +291,30 @@ const handleUpdateProduct = async (e) => {
                 <option value="Mahal">Mahal</option>
               </select>
             </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px' }}>Upload Gambar Produk</label>
+              <input
+                type="file"
+                name="file_gambar"
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db', boxSizing: 'border-box', background: '#fff' }}
+              />
+              {formData.gambar && !selectedImage && (
+                <small style={{ display: 'block', marginTop: '6px', color: '#6b7280' }}>
+                  File saat ini: {formData.gambar}
+                </small>
+              )}
+              {previewImage && (
+                <div style={{ marginTop: '12px' }}>
+                  <img
+                    src={previewImage}
+                    alt="Preview gambar produk"
+                    style={{ width: '100%', maxWidth: '180px', height: '140px', objectFit: 'cover', borderRadius: '10px', border: '1px solid #d1d5db' }}
+                  />
+                </div>
+              )}
+            </div>
             <div></div>
             <div style={{ display: 'flex', alignItems: 'flex-end', paddingTop: '4px' }}>
               <button type="submit" disabled={loadingSubmit} style={{ width: '100%', padding: '10px', background: loadingSubmit ? '#9ca3af' : '#10b981', color: '#fff', borderRadius: '6px', border: 'none', cursor: loadingSubmit ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}>
@@ -272,6 +337,7 @@ const handleUpdateProduct = async (e) => {
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>ID</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Nama Sepatu</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Brand</th>
+              <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Gambar</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Kategori/Lapangan</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Harga</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Aksi</th>
@@ -280,7 +346,7 @@ const handleUpdateProduct = async (e) => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="6" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
+                <td colSpan="7" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
                   Loading mengambil data ke database...
                 </td>
               </tr>
@@ -290,6 +356,23 @@ const handleUpdateProduct = async (e) => {
                   <td style={{ padding: '16px' }}>{item.id || index + 1}</td>
                   <td style={{ padding: '16px', fontWeight: '600' }}>{item.nama || '-'}</td>
                   <td style={{ padding: '16px' }}>{item.brand || '-'}</td>
+                  <td style={{ padding: '16px' }}>
+                    {item.gambar ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <img
+                          src={`http://localhost/sisrek/uploads/${item.gambar}`}
+                          alt={item.nama || 'Gambar sepatu'}
+                          style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #e5e7eb' }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                        <span>{item.gambar}</span>
+                      </div>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
                   <td style={{ padding: '16px' }}>{item.kategori || item.lapangan || '-'}</td>
                   <td style={{ padding: '16px' }}>{item.harga || '-'}</td>
                   <td style={{ padding: '16px' }}>
@@ -300,7 +383,7 @@ const handleUpdateProduct = async (e) => {
               ))
             ) : (
               <tr>
-                <td colSpan="6" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
+                <td colSpan="7" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
                   Tidak ada data. <br />
                   <span style={{ fontSize: '14px' }}>Pastikan database MySQL sudah terisi dan skrip PHP me-return data JSON dengan benar.</span>
                 </td>

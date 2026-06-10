@@ -52,7 +52,7 @@ function HasilRekomendasi({ result, loading, hasSearched }) {
             <div className="bg-white rounded-xl p-10 text-center shadow-sm md:col-span-2 xl:col-span-3">
               <div className="text-6xl mb-4">{"\uD83D\uDC5F"}</div>
 
-              <h2 className="text-2xl font-bold mb-3">
+              <h2 className="text-2xl text-black font-bold mb-3">
                 Belum Ada Rekomendasi
               </h2>
 
