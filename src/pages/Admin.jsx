@@ -353,13 +353,14 @@ const handleUpdateProduct = async (e) => {
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Gambar</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Kategori/Lapangan</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Harga</th>
+              <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Harga Nominal</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Aksi</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="7" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
+                <td colSpan="8" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
                   Loading mengambil data ke database...
                 </td>
               </tr>
@@ -389,6 +390,11 @@ const handleUpdateProduct = async (e) => {
                   <td style={{ padding: '16px' }}>{item.kategori || item.lapangan || '-'}</td>
                   <td style={{ padding: '16px' }}>{item.harga || '-'}</td>
                   <td style={{ padding: '16px' }}>
+                    {item.harga_nominal
+                      ? `Rp ${Number(item.harga_nominal).toLocaleString('id-ID')}`
+                      : '-'}
+                  </td>
+                  <td style={{ padding: '16px' }}>
                     <button onClick={() => handleEdit(item)} style={{ marginRight: '16px', color: '#2563eb', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Edit</button>
                     <button onClick={() => handleDelete(item.id)} style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Hapus</button>
                   </td>
@@ -396,7 +402,7 @@ const handleUpdateProduct = async (e) => {
               ))
             ) : (
               <tr>
-                <td colSpan="7" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
+                <td colSpan="8" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
                   Tidak ada data. <br />
                   <span style={{ fontSize: '14px' }}>Pastikan database MySQL sudah terisi dan skrip PHP me-return data JSON dengan benar.</span>
                 </td>
