@@ -71,6 +71,10 @@ function HasilRekomendasi({ result, loading, hasSearched }) {
               const imgSrc = item.gambar
                 ? `http://localhost/sisrek/uploads/${item.gambar}`
                 : "https://placehold.co/400x400/e2e8f0/64748b?text=No+Image";
+              const productLink =
+                typeof item.link_produk === "string"
+                  ? item.link_produk.trim()
+                  : "";
 
               return (
                 <div
@@ -106,6 +110,17 @@ function HasilRekomendasi({ result, loading, hasSearched }) {
                   <p className="text-sm text-gray-600 mb-3">
                     Lapangan: {item.lapangan}
                   </p>
+
+                  {productLink && (
+                    <a
+                      href={productLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center rounded-lg bg-secondary px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 mb-4"
+                    >
+                      Lihat Produk
+                    </a>
+                  )}
 
                   <div className="w-full bg-surface-container-low rounded-full h-2">
                     <div

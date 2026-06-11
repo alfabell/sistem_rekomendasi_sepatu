@@ -9,7 +9,26 @@ const initialFormData = {
   harga_nominal: '',
   berat: 'Ringan',
   material: 'Synthetic',
-  gambar: ''
+  gambar: '',
+  link_produk: ''
+};
+
+const normalizeProduct = (item) => ({
+  ...item,
+  link_produk: typeof item.link_produk === 'string' ? item.link_produk.trim() : ''
+});
+
+const isValidUrl = (value) => {
+  if (!value) {
+    return true;
+  }
+
+  try {
+    const parsedUrl = new URL(value);
+    return ['http:', 'https:'].includes(parsedUrl.protocol);
+  } catch {
+    return false;
+  }
 };
 
 const Admin = () => {
@@ -23,6 +42,7 @@ const Admin = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
+  const [linkError, setLinkError] = useState('');
 
   // Pastikan URL API Anda sudah tepat (disesuaikan dengan nama file backend)
   const API_URL = 'http://localhost/sisrek/admin_api.php';
@@ -37,7 +57,7 @@ const Admin = () => {
     fetch(API_URL)
       .then(res => res.json())
       .then(data => {
-        setDataSepatu(Array.isArray(data) ? data : []);
+        setDataSepatu(Array.isArray(data) ? data.map(normalizeProduct) : []);
         setLoading(false);
       })
       .catch(err => {
@@ -67,13 +87,25 @@ const Admin = () => {
     setSelectedImage(null);
     setPreviewImage('');
     setEditId(null);
+    setLinkError('');
   };
 
   // Handler mengubah input
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'link_produk') {
+      const trimmedValue = value.trim();
+      setLinkError(
+        trimmedValue && !isValidUrl(trimmedValue)
+          ? 'Link produk harus berupa URL valid yang diawali http:// atau https://'
+          : ''
+      );
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
@@ -92,7 +124,11 @@ const Admin = () => {
     const payload = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-      payload.append(key, value ?? '');
+      const normalizedValue =
+        key === 'link_produk' && typeof value === 'string'
+          ? value.trim()
+          : value ?? '';
+      payload.append(key, normalizedValue);
     });
 
     if (selectedImage) {
@@ -105,6 +141,13 @@ const Admin = () => {
   // Handler mengirim (POST) ke PHP Backend
   const handleAddProduct = async (e) => {
     e.preventDefault();
+
+    const trimmedLinkProduk = formData.link_produk.trim();
+    if (trimmedLinkProduk && !isValidUrl(trimmedLinkProduk)) {
+      setLinkError('Link produk harus berupa URL valid yang diawali http:// atau https://');
+      return;
+    }
+
     setLoadingSubmit(true);
 
     try {
@@ -128,7 +171,7 @@ const Admin = () => {
         } else {
           alert('Gagal dari server: ' + data.pesan);
         }
-      } catch (parseError) {
+      } catch {
         console.error("Respon bukan JSON:", textResponse);
         setLoadingSubmit(false);
         alert("Gagal parsing respons server. Kemungkinan ada Error PHP/Warning. Cek Console (F12) untuk melihat pesan aslinya.\n\nRespon Server: " + textResponse.substring(0, 100));
@@ -180,10 +223,12 @@ const handleEdit = (item) => {
     harga_nominal: item.harga_nominal || '',
     berat: item.berat,
     material: item.material,
-    gambar: item.gambar || ''
+    gambar: item.gambar || '',
+    link_produk: item.link_produk || ''
   });
   setSelectedImage(null);
   setPreviewImage(item.gambar ? `http://localhost/sisrek/uploads/${item.gambar}` : '');
+  setLinkError('');
 
   setShowForm(true);
 };
@@ -191,6 +236,14 @@ const handleEdit = (item) => {
 const handleUpdateProduct = async (e) => {
 
   e.preventDefault();
+  const trimmedLinkProduk = formData.link_produk.trim();
+
+  if (trimmedLinkProduk && !isValidUrl(trimmedLinkProduk)) {
+    setLinkError('Link produk harus berupa URL valid yang diawali http:// atau https://');
+    return;
+  }
+
+  setLoadingSubmit(true);
 
   try {
 
@@ -225,6 +278,8 @@ const handleUpdateProduct = async (e) => {
     console.error(error);
     alert("Gagal update data");
 
+  } finally {
+    setLoadingSubmit(false);
   }
 };
 
@@ -258,7 +313,7 @@ const handleUpdateProduct = async (e) => {
       {/* FORM INPUT TAMBAH DATA (Toggle Muncul Berdasarkan State) */}
       {showForm && (
         <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', border: '1px solid #e5e7eb', marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '20px', margin: '0 0 16px 0', borderBottom: '1px solid #e5e7eb', paddingBottom: '12px' }}>Masukkan Data Sepatu Baru</h2>
+          <h2 style={{ fontSize: '20px', margin: '0 0 16px 0', borderBottom: '1px solid #e5e7eb', paddingBottom: '12px' }}>{editId ? 'Edit Data Sepatu' : 'Masukkan Data Sepatu Baru'}</h2>
           <form
   onSubmit={
     editId
@@ -303,6 +358,28 @@ const handleUpdateProduct = async (e) => {
                 placeholder="Contoh: 700000"
                 style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db', boxSizing: 'border-box' }}
               />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px' }}>Link Produk</label>
+              <input
+                type="url"
+                name="link_produk"
+                value={formData.link_produk}
+                onChange={handleChange}
+                placeholder="https://contoh.com/produk"
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  borderRadius: '6px',
+                  border: `1px solid ${linkError ? '#ef4444' : '#d1d5db'}`,
+                  boxSizing: 'border-box'
+                }}
+              />
+              {linkError && (
+                <small style={{ display: 'block', marginTop: '6px', color: '#dc2626' }}>
+                  {linkError}
+                </small>
+              )}
             </div>
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px' }}>Upload Gambar Produk</label>
@@ -354,13 +431,14 @@ const handleUpdateProduct = async (e) => {
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Kategori/Lapangan</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Harga</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Harga Nominal</th>
+              <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Link Produk</th>
               <th style={{ padding: '16px', borderBottom: '2px solid #e5e7eb', color: '#374151' }}>Aksi</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="8" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
+                <td colSpan="9" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
                   Loading mengambil data ke database...
                 </td>
               </tr>
@@ -395,6 +473,20 @@ const handleUpdateProduct = async (e) => {
                       : '-'}
                   </td>
                   <td style={{ padding: '16px' }}>
+                    {item.link_produk ? (
+                      <a
+                        href={item.link_produk}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}
+                      >
+                        Lihat Produk
+                      </a>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  <td style={{ padding: '16px' }}>
                     <button onClick={() => handleEdit(item)} style={{ marginRight: '16px', color: '#2563eb', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Edit</button>
                     <button onClick={() => handleDelete(item.id)} style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Hapus</button>
                   </td>
@@ -402,7 +494,7 @@ const handleUpdateProduct = async (e) => {
               ))
             ) : (
               <tr>
-                <td colSpan="8" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
+                <td colSpan="9" style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>
                   Tidak ada data. <br />
                   <span style={{ fontSize: '14px' }}>Pastikan database MySQL sudah terisi dan skrip PHP me-return data JSON dengan benar.</span>
                 </td>

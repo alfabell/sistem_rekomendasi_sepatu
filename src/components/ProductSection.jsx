@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 
+const normalizeProduct = (item) => ({
+  ...item,
+  link_produk: typeof item.link_produk === "string" ? item.link_produk.trim() : "",
+});
+
 const ProductSection = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -9,7 +14,9 @@ const ProductSection = () => {
   useEffect(() => {
     fetch("http://localhost/sisrek/getData.php")
       .then((res) => res.json())
-      .then((data) => setProducts(data))
+      .then((data) =>
+        setProducts(Array.isArray(data) ? data.map(normalizeProduct) : [])
+      )
       .catch((err) => console.error(err));
   }, []);
 
@@ -107,6 +114,25 @@ const ProductSection = () => {
       fontSize: "0.95rem",
     },
 
+    actionRow: {
+      display: "flex",
+      marginTop: "16px",
+    },
+
+    productLink: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "10px 14px",
+      borderRadius: "10px",
+      backgroundColor: "#161ba3",
+      color: "#ffffff",
+      textDecoration: "none",
+      fontSize: "0.9rem",
+      fontWeight: "600",
+      transition: "opacity 0.2s ease",
+    },
+
     paginationInfo: {
       textAlign: "center",
       marginTop: "30px",
@@ -192,6 +218,25 @@ const ProductSection = () => {
               <p style={styles.info}>
                 <strong>Material:</strong> {item.material}
               </p>
+
+              {item.link_produk && (
+                <div style={styles.actionRow}>
+                  <a
+                    href={item.link_produk}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={styles.productLink}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.opacity = "0.9";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.opacity = "1";
+                    }}
+                  >
+                    Lihat Produk
+                  </a>
+                </div>
+              )}
             </div>
           ))}
         </div>
